@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Bar-Candle Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* General Page Styling */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #1e1e2f; /* Dark background */
+      color: #fff;
+    }
+    h1 {
+      color: #fff;
+      padding-top: 20px;
+    }
+    canvas {
+      background-color: #2a2a3c; /* Darker container background */
+      border-radius: 10px;
+      margin: 30px auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <h1>Employee Distribution by Gender</h1>
+  <canvas id="employeeChart" width="500" height="400"></canvas>
+
+  <script>
+    // Employee data
+    const genders = ['Male', 'Female'];
+    const counts = [180, 120];
+    const colors = ['#4285F4', '#EA4335']; // Blue and Red-like vibrant colors
+
+    // Create the bar-candle chart
+    const ctx = document.getElementById('employeeChart').getContext('2d');
+    const employeeChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: genders,
+        datasets: [{
+          label: 'Employees',
+          data: counts,
+          backgroundColor: colors,
+          borderColor: 'white',
+          borderWidth: 2,
+          borderRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: '#ddd' // Legend text color
+            }
+          },
+          tooltip: {
+            enabled: true,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            titleColor: '#fff',
+            bodyColor: '#ddd'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#ddd', // Y-axis text color
+              stepSize: 50
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)' // Light grid lines
+            }
+          },
+          x: {
+            ticks: {
+              color: '#ddd' // X-axis text color
+            },
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+
+    // Adding "candles" (lines)
+    counts.forEach((count, index) => {
+      const xPosition = employeeChart.scales.x.getPixelForValue(index);
+      const yBottom = employeeChart.scales.y.getPixelForValue(0);
+      const yTop = employeeChart.scales.y.getPixelForValue(count);
+
+      const ctxCanvas = ctx.canvas.getContext('2d');
+      ctxCanvas.beginPath();
+      ctxCanvas.moveTo(xPosition, yBottom);
+      ctxCanvas.lineTo(xPosition, yTop);
+      ctxCanvas.lineWidth = 3;
+      ctxCanvas.strokeStyle = 'white';
+      ctxCanvas.stroke();
+    });
+  </script>
+</body>
+</html>
